@@ -4,6 +4,7 @@ import {
   getClientName,
   getOverdueInvoices,
 } from '@/lib/invoiceUtils';
+import StatusBadge from '@/components/StatusBadge';
 
 export default function InvoicesPage() {
   const overdueInvoices = getOverdueInvoices(invoices);
@@ -42,7 +43,9 @@ export default function InvoicesPage() {
                 <td className="py-2 px-3">
                   {getClientName(clients, invoice.clientId)}
                 </td>
-                <td className="py-2 px-3">{invoice.status}</td>
+                <td className="py-2 px-3">
+                  <StatusBadge status={invoice.status} />
+                </td>
                 <td className="py-2 px-3">{invoice.dueDate}</td>
                 <td className="py-2 px-3 text-right">
                   {formatCurrency(invoice.amountCents)}
