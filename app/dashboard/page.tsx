@@ -8,6 +8,7 @@ export default function DashboardPage() {
         <StatCard label="Revenue" value="$12,400" change={8.2} />
         <StatCard label="Overdue invoices" value="7" change={-12} />
         <StatCard label="Clients" value="23" />
+        <StatCard label="Paid this month" value="23" />
       </div>
     </main>
   );
