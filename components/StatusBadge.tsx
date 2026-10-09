@@ -11,10 +11,10 @@ const styles: Record<InvoiceStatus, string> = {
   draft: 'bg-gray-100 text-gray-800',
 };
 
-export default function StatusBadge({ status }: StatusBadgeProps) {
+export function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <span
-      className={`rounded-full px-2 py-0.5 text-xs font-mediu ${styles[status]}`}
+      className={`whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ${styles[status]}`}
     >
       {status}
     </span>

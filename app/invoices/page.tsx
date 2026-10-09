@@ -4,7 +4,7 @@ import {
   getClientName,
   getOverdueInvoices,
 } from '@/lib/invoiceUtils';
-import StatusBadge from '@/components/StatusBadge';
+import { StatusBadge } from '@/components/StatusBadge';
 
 export default function InvoicesPage() {
   const overdueInvoices = getOverdueInvoices(invoices);
