@@ -36,3 +36,18 @@ export function getOverdueInvoices(invoices: Invoice[]): Invoice[] {
     .filter((invoice) => invoice.status === 'overdue')
     .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
 }
+
+export function getInvoicesForClient(
+  invoices: Invoice[],
+  clientId: string,
+): Invoice[] {
+  return invoices.filter((invoice) => invoice.clientId === clientId);
+}
+
+export function getOutstandingTotal(invoices: Invoice[]): number {
+  // Owed = sent or overdue; drafts aren't issued yet, paid is settled.
+  const OUTSTANDING_STATUSES: InvoiceStatus[] = ['sent', 'overdue'];
+  return invoices
+    .filter((invoice) => OUTSTANDING_STATUSES.includes(invoice.status))
+    .reduce((total, invoice) => total + invoice.amountCents, 0);
+}
