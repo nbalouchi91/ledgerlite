@@ -12,6 +12,10 @@ const styles: Record<InvoiceStatus, string> = {
 };
 
 export function StatusBadge({ status }: StatusBadgeProps) {
+  const formattedDate = new Intl.DateTimeFormat('en-ca', {
+    dateStyle: 'full',
+    timeStyle: 'long',
+  }).format(new Date());
   return (
     <span
       className={`whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-medium ${styles[status]}`}

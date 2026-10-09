@@ -7,6 +7,16 @@ export function formatCurrency(cents: number): string {
   }).format(cents / 100);
 }
 
+const dateFormatter = new Intl.DateTimeFormat('en-CA', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+export function formatDate(isoDate: string): string {
+  return dateFormatter.format(new Date(isoDate));
+}
+
 export function getTotalByStatus(
   invoices: Invoice[],
   status: InvoiceStatus,

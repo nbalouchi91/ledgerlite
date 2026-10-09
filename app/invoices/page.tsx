@@ -1,6 +1,7 @@
 import { invoices, clients } from '@/lib/sampleData';
 import {
   formatCurrency,
+  formatDate,
   getClientName,
   getOverdueInvoices,
 } from '@/lib/invoiceUtils';
@@ -46,7 +47,7 @@ export default function InvoicesPage() {
                 <td className="py-2 px-3">
                   <StatusBadge status={invoice.status} />
                 </td>
-                <td className="py-2 px-3">{invoice.dueDate}</td>
+                <td className="py-2 px-3">{formatDate(invoice.dueDate)}</td>
                 <td className="py-2 px-3 text-right">
                   {formatCurrency(invoice.amountCents)}
                 </td>
