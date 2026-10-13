@@ -11,7 +11,7 @@ const styles: Record<InvoiceStatus, string> = {
   draft: 'bg-gray-100 text-gray-800',
 };
 
-export function StatusBadge({ status }: StatusBadgeProps) {
+export default function StatusBadge({ status }: StatusBadgeProps) {
   const formattedDate = new Intl.DateTimeFormat('en-ca', {
     dateStyle: 'full',
     timeStyle: 'long',
