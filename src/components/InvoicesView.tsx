@@ -5,10 +5,10 @@ import {
   formatDate,
   getClientName,
   getOverdueInvoices,
-} from '@/lib/invoiceUtils';
+} from '@/src/lib/invoiceUtils';
 import NewInvoiceForm from './NewInvoiceForm';
 import StatusBadge from './StatusBadge';
-import type { Client, Invoice } from '@/types';
+import type { Client, Invoice } from '@/src/types';
 
 type InvoicesViewProps = {
   initialInvoices: Invoice[];

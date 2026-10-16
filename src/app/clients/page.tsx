@@ -2,8 +2,8 @@ import {
   formatCurrency,
   getInvoicesForClient,
   getOutstandingTotal,
-} from '@/lib/invoiceUtils';
-import { clients, invoices } from '@/lib/sampleData';
+} from '@/src/lib/invoiceUtils';
+import { clients, invoices } from '@/src/lib/sampleData';
 
 export default function ClientsPage() {
   return (
