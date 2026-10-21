@@ -24,9 +24,9 @@ export async function POST(request: Request) {
   if (!result.success) {
     return Response.json(
       {
-        error: result.error.issues.map(
-          (issue) => `${issue.path.join('.')}: ${issue.message}`,
-        ),
+        error: result.error.issues
+          .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
+          .join(' '),
       },
       { status: 400 },
     );
