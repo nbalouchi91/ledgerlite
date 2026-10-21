@@ -1,5 +1,5 @@
-import { clients, invoices as seed } from '@/src/lib/sampleData';
-import { invoiceSchema, newInvoiceSchema } from '@/src/lib/schemas';
+import { clients, invoices as seed } from '@/lib/sampleData';
+import { invoiceSchema, newInvoiceSchema } from '@/lib/schemas';
 
 const store = [...seed];
 
@@ -13,7 +13,10 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return Response.json({ error: 'Invalid JSON' }, { status: 400 });
+    return Response.json(
+      { error: 'Request body must be valid JSON.' },
+      { status: 400 },
+    );
   }
 
   // Step 2: validate the shape

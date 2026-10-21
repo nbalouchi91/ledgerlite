@@ -1,5 +1,5 @@
-import { clients, invoices } from '@/src/lib/sampleData';
-import InvoicesView from '@/src/components/InvoicesView';
+import { clients, invoices } from '@/lib/sampleData';
+import InvoicesView from '@/components/InvoicesView';
 
 export default function InvoicesPage() {
   return (

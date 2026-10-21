@@ -1,4 +1,4 @@
-import { InvoiceStatus } from '@/src/types';
+import { InvoiceStatus } from '@/types';
 
 type StatusBadgeProps = {
   status: InvoiceStatus;

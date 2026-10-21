@@ -1,4 +1,4 @@
-import { Client, Invoice, InvoiceStatus } from '@/src/types';
+import { Client, Invoice, InvoiceStatus } from '@/types';
 
 export function formatCurrency(cents: number): string {
   return new Intl.NumberFormat('en-CA', {

@@ -1,4 +1,4 @@
-import { Client, Invoice } from '@/src/types';
+import { Client, Invoice } from '@/types';
 
 export const clients: Client[] = [
   {

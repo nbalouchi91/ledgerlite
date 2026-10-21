@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { Client, Invoice } from '@/src/types';
+import type { Client, Invoice } from '@/types';
 
 type NewInvoiceFormProps = {
   clients: Client[];
