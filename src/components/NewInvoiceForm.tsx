@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import type { Client, Invoice } from '@/types';
+import type { Client, NewInvoice } from '@/types';
 
 type NewInvoiceFormProps = {
   clients: Client[];
-  onAdd: (invoice: Invoice) => void;
+  onAdd: (invoice: NewInvoice) => Promise<string | null>;
 };
 
 const fieldClass =
@@ -20,8 +20,9 @@ export default function NewInvoiceForm({
   const [amount, setAmount] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (clientId === '') {
       setError('Please select a client.');
@@ -38,19 +39,27 @@ export default function NewInvoiceForm({
       return;
     }
 
-    const newInvoice: Invoice = {
-      id: crypto.randomUUID(),
+    const newInvoice: NewInvoice = {
       clientId,
       amountCents: cents,
-      status: 'draft',
       issuedDate: new Date().toLocaleDateString('en-CA'),
-      dueDate: dueDate,
+      dueDate,
     };
-    onAdd(newInvoice);
-    setClientId('');
-    setAmount('');
-    setDueDate('');
     setError('');
+    setSubmitting(true);
+    try {
+      const message = await onAdd(newInvoice);
+      if (message) {
+        setError(message);
+        return;
+      }
+      setClientId('');
+      setAmount('');
+      setDueDate('');
+      setError('');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -109,9 +118,10 @@ export default function NewInvoiceForm({
       </div>
       <button
         type="submit"
-        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2"
+        className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        disabled={submitting}
       >
-        Add invoice
+        {submitting ? 'Submitting...' : 'Add invoice'}
       </button>
       {error && (
         <p role="alert" className="text-sm text-red-600 sm:col-span-4">

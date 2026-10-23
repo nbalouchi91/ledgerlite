@@ -8,8 +8,8 @@ import {
 } from '@/lib/invoiceUtils';
 import NewInvoiceForm from './NewInvoiceForm';
 import StatusBadge from './StatusBadge';
-import type { Client, Invoice } from '@/types';
-import { z } from 'zod';
+import type { Client, Invoice, NewInvoice } from '@/types';
+import { set, z } from 'zod';
 import { invoiceSchema } from '@/lib/schemas';
 
 type InvoicesViewProps = {
@@ -23,8 +23,30 @@ export default function InvoicesView({ clients }: InvoicesViewProps) {
 
   const overdueInvoices = getOverdueInvoices(invoices);
 
-  function handleAddInvoice(invoice: Invoice) {
-    setInvoices((prevInvoices) => [...prevInvoices, invoice]);
+  async function handleAddInvoice(
+    newInvoice: NewInvoice,
+  ): Promise<string | null> {
+    try {
+      const response = await fetch('/api/invoices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newInvoice),
+      });
+
+      const body = await response.json();
+
+      if (!response.ok) {
+        return typeof body.error === 'string'
+          ? body.error
+          : 'Something went wrong.';
+      }
+      const created = invoiceSchema.parse(body);
+      setInvoices((prev) => [...prev, created]);
+
+      return null;
+    } catch {
+      return 'Could not reach the server.';
+    }
   }
 
   useEffect(() => {
