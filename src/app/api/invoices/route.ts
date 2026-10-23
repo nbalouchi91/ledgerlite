@@ -1,7 +1,8 @@
 import { clients, invoices as seed } from '@/lib/sampleData';
 import { invoiceSchema, newInvoiceSchema } from '@/lib/schemas';
+import type { Invoice } from '@/types';
 
-const store = [...seed];
+const store: Invoice[] = [...seed];
 
 export async function GET() {
   return Response.json(store);
