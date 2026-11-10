@@ -9,7 +9,7 @@ import {
 import NewInvoiceForm from './NewInvoiceForm';
 import StatusBadge from './StatusBadge';
 import type { Client, Invoice, NewInvoice } from '@/types';
-import { set, z } from 'zod';
+import { z } from 'zod';
 import { invoiceSchema } from '@/lib/schemas';
 
 type InvoicesViewProps = {
