@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useState } from 'react';
 import {
   formatCurrency,
   formatDate,
@@ -8,18 +7,24 @@ import {
 } from '@/lib/invoiceUtils';
 import NewInvoiceForm from './NewInvoiceForm';
 import StatusBadge from './StatusBadge';
-import type { Client, Invoice, NewInvoice } from '@/types';
-import { z } from 'zod';
-import { invoiceSchema } from '@/lib/schemas';
+import type { Client, NewInvoice } from '@/types';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchInvoices } from '@/lib/api';
 
 type InvoicesViewProps = {
   clients: Client[];
 };
 
 export default function InvoicesView({ clients }: InvoicesViewProps) {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const queryClient = useQueryClient();
+  const {
+    data: invoices = [],
+    isPending,
+    error,
+  } = useQuery({
+    queryKey: ['invoices'],
+    queryFn: fetchInvoices,
+  });
 
   const overdueInvoices = getOverdueInvoices(invoices);
 
@@ -40,8 +45,7 @@ export default function InvoicesView({ clients }: InvoicesViewProps) {
           ? body.error
           : 'Something went wrong.';
       }
-      const created = invoiceSchema.parse(body);
-      setInvoices((prev) => [...prev, created]);
+      await queryClient.invalidateQueries({ queryKey: ['invoices'] });
 
       return null;
     } catch {
@@ -49,48 +53,14 @@ export default function InvoicesView({ clients }: InvoicesViewProps) {
     }
   }
 
-  useEffect(() => {
-    // 1. Create an instance of AbortController
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    const fetchData = async () => {
-      try {
-        // 2. Pass the signal to the fetch options
-        const response = await fetch('/api/invoices', { signal });
-
-        if (!response.ok) {
-          throw new Error(`Request failed: ${response.status}`);
-        }
-        const result = await response.json();
-
-        setInvoices(z.array(invoiceSchema).parse(result));
-      } catch {
-        if (!signal.aborted) {
-          setError('Could not load invoices.');
-        }
-      } finally {
-        if (!signal.aborted) {
-          setLoading(false);
-        }
-      }
-    };
-    fetchData();
-
-    // 3. Cleanup function to abort fetch on unmount
-    return () => {
-      controller.abort();
-    };
-  }, []);
-
   let content;
 
-  if (loading) {
+  if (isPending) {
     content = <div>Loading...</div>;
   } else if (error) {
     content = (
       <p role="alert" className="mt-4 text-sm text-red-600">
-        {error}
+        {error.message}
       </p>
     );
   } else {
