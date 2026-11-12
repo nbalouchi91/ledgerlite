@@ -2,7 +2,9 @@ import { clients, invoices as seed } from '@/lib/sampleData';
 import { invoiceSchema, newInvoiceSchema } from '@/lib/schemas';
 import type { Invoice } from '@/types';
 
-const store: Invoice[] = [...seed];
+//const store: Invoice[] = [...seed];
+const globalForStore = globalThis as unknown as { invoiceStore?: Invoice[] };
+const store: Invoice[] = (globalForStore.invoiceStore ??= [...seed]);
 
 export async function GET() {
   return Response.json(store);
