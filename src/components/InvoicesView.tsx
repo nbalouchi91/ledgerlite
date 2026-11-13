@@ -8,8 +8,8 @@ import {
 import NewInvoiceForm from './NewInvoiceForm';
 import StatusBadge from './StatusBadge';
 import type { Client, NewInvoice } from '@/types';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchInvoices } from '@/lib/api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createInvoice, fetchInvoices } from '@/lib/api';
 
 type InvoicesViewProps = {
   clients: Client[];
@@ -26,30 +26,21 @@ export default function InvoicesView({ clients }: InvoicesViewProps) {
     queryFn: fetchInvoices,
   });
 
+  const createMutation = useMutation({
+    mutationFn: createInvoice,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['invoices'] }),
+  });
+
   const overdueInvoices = getOverdueInvoices(invoices);
 
   async function handleAddInvoice(
     newInvoice: NewInvoice,
   ): Promise<string | null> {
     try {
-      const response = await fetch('/api/invoices', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newInvoice),
-      });
-
-      const body = await response.json();
-
-      if (!response.ok) {
-        return typeof body.error === 'string'
-          ? body.error
-          : 'Something went wrong.';
-      }
-      await queryClient.invalidateQueries({ queryKey: ['invoices'] });
-
+      await createMutation.mutateAsync(newInvoice);
       return null;
-    } catch {
-      return 'Could not reach the server.';
+    } catch (err) {
+      return err instanceof Error ? err.message : 'Something went wrong.';
     }
   }
 
